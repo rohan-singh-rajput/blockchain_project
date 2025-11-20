@@ -1,24 +1,20 @@
-import React, { useState } from "react";
-import AdminDashboard from "./components/AdminDashboard";
-import SellerDashboard from "./components/SellerDashboard";
-import BuyerDashboard from "./components/BuyerDashboard";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import Landing from "./pages/Landing";
+import AdminDashboard from "./pages/AdminDashboard";
+import SellerDashboard from "./pages/SellerDashboard";
+import BuyerDashboard from "./pages/BuyerDashboard";
 
 export default function App() {
-  const [page, setPage] = useState("admin");
-
   return (
-    <div>
-      <h1>Government Procurement Portal</h1>
-
-      <button onClick={() => setPage("admin")}>Admin</button>
-      <button onClick={() => setPage("seller")}>Seller</button>
-      <button onClick={() => setPage("buyer")}>Buyer</button>
-
-      <hr />
-
-      {page === "admin" && <AdminDashboard />}
-      {page === "seller" && <SellerDashboard />}
-      {page === "buyer" && <BuyerDashboard />}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/seller" element={<SellerDashboard />} />
+        <Route path="/buyer" element={<BuyerDashboard />} />
+      </Routes>
+    </Router>
   );
 }
