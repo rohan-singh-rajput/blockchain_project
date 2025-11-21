@@ -99,32 +99,7 @@ Secures buyer payments until delivery is confirmed.
 
 ## 📁 Project Structure
 
-gov-procurement-dapp/
-│
-├── contracts/
-│ ├── Registry.sol
-│ ├── Procurement.sol
-│ ├── Escrow.sol
-│
-├── scripts/
-│ └── deploy.js
-│
-├── frontend/
-│ ├── src/
-│ │ ├── contracts/
-│ │ │ ├── registry.json
-│ │ │ ├── procurement.json
-│ │ │ ├── escrow.json
-│ │ │ └── index.js
-│ │ ├── pages/
-│ │ └── App.jsx
-│ └── package.json
-│
-├── hardhat.config.js
-└── README.md
-
-
----
+![Project Structure](../frontend/public/structure.png)
 
 ## 🔧 Installation & Setup
 
