@@ -5,18 +5,18 @@ import "./Registry.sol";
 
 contract Procurement {
     Registry public registry;
-    address public escrow; // address of Escrow contract
+    address public escrow; 
 
     struct Item {
         string brand;
         string name;
-        uint256 total_quantity; // sum of all seller quantities for this item
+        uint256 total_quantity; 
     }
 
     struct SellerItem {
-        uint256 itemId;           // which catalog item
-        uint256 selling_price;    // price per unit (in wei)
-        uint256 selling_quantity; // how many units this seller is offering
+        uint256 itemId;           
+        uint256 selling_price;    
+        uint256 selling_quantity; 
     }
 
     mapping(uint256 => Item) public items;
@@ -31,7 +31,6 @@ contract Procurement {
         registry = Registry(registryAddress);
     }
 
-    // -------- Admin-only config --------
 
     function setEscrow(address _escrow) external {
         require(msg.sender == registry.admin(), "Not admin");
@@ -39,7 +38,7 @@ contract Procurement {
         escrow = _escrow;
     }
 
-    /// @notice Admin defines a catalog item
+   
     function approveItem(
         string memory brand,
         string memory name
@@ -56,7 +55,7 @@ contract Procurement {
         itemCount++;
     }
 
-    /// @notice Verified seller lists an already-defined item for sale
+    
     function submitItem(
         uint256 itemId,
         uint256 selling_price,
@@ -86,7 +85,7 @@ contract Procurement {
         item.total_quantity += selling_quantity;
     }
 
-    /// @notice Called by Escrow to consume seller quantity when an order is created
+    
     function consumeSellerQuantity(
         address seller,
         uint256 itemId,
@@ -105,7 +104,7 @@ contract Procurement {
         item.total_quantity -= quantity;
     }
 
-    // -------- View helper for frontend --------
+   
 
     function getAllListings()
         external

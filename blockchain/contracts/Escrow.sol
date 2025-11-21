@@ -11,7 +11,7 @@ contract Escrow {
         address seller;
         address buyer;
         uint256 quantity;
-        uint256 amount;   // total amount paid (price * quantity)
+        uint256 amount;   
         bool delivered;
         bool paidOut;
     }
@@ -23,7 +23,7 @@ contract Escrow {
         procurement = Procurement(procurementAddress);
     }
 
-    /// @notice Buyer creates an order for a seller's listing
+    
     function createOrder(
         uint256 itemId,
         address seller,
@@ -53,13 +53,12 @@ contract Escrow {
             paidOut: false
         });
 
-        // Reserve the quantity on Procurement (will also update total_quantity)
         procurement.consumeSellerQuantity(seller, itemId, quantity);
 
         orderCount++;
     }
 
-    /// @notice Buyer confirms delivery so payment is released to seller
+ 
     function confirmDelivery(uint256 orderId) external {
         Order storage o = orders[orderId];
         require(msg.sender == o.buyer, "Only buyer");

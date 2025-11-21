@@ -26,7 +26,6 @@ export default function SellerDashboard() {
                 return;
             }
 
-            // ethers v6 likes bigint for uint256
             const sellingPrice = BigInt(priceStr);
 
             const tx = await procurement.submitItem(
@@ -44,18 +43,18 @@ export default function SellerDashboard() {
     };
 
     return (
-        <div className="px-10 py-10 bg-gray-100 min-h-screen">
-            <h1 className="text-4xl font-bold text-green-700 mb-10">
+        <div className="min-h-screen bg-gradient-to-b from-white to-gray-200 px-6 py-10 font-sans text-gray-900">
+            <h1 className="text-4xl font-semibold mb-10 text-gray-900 text-center">
                 Seller Dashboard
             </h1>
 
-            <div className="bg-white p-8 rounded-xl shadow w-full max-w-lg mx-auto hover:shadow-lg transition">
-                <h3 className="text-2xl font-bold mb-6">
+            <div className="max-w-lg mx-auto backdrop-blur-xl bg-white/30 border border-white/30 rounded-2xl p-8 shadow-sm hover:shadow-md transition">
+                <h3 className="text-2xl font-medium mb-6 text-gray-900 text-center">
                     List Verified Product for Sale
                 </h3>
 
                 <input
-                    className="border p-3 w-full rounded mb-4"
+                    className="border border-white/30 bg-white/20 backdrop-blur-xl p-3 w-full rounded-xl mb-4 text-gray-900 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
                     placeholder="Catalog Item ID (approved by Admin)"
                     type="number"
                     value={itemId}
@@ -63,14 +62,14 @@ export default function SellerDashboard() {
                 />
 
                 <input
-                    className="border p-3 w-full rounded mb-4"
+                    className="border border-white/30 bg-white/20 backdrop-blur-xl p-3 w-full rounded-xl mb-4 text-gray-900 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
                     placeholder="Price per unit (in Wei)"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                 />
 
                 <input
-                    className="border p-3 w-full rounded mb-4"
+                    className="border border-white/30 bg-white/20 backdrop-blur-xl p-3 w-full rounded-xl mb-4 text-gray-900 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
                     placeholder="Quantity"
                     type="number"
                     value={quantity}
@@ -79,7 +78,7 @@ export default function SellerDashboard() {
 
                 <button
                     onClick={submitItem}
-                    className="w-full bg-green-600 text-white py-3 rounded-xl hover:bg-green-700 transition"
+                    className="w-full py-3 rounded-2xl bg-gray-800 text-white font-medium hover:bg-gray-900 transition"
                 >
                     List Item
                 </button>

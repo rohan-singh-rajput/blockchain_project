@@ -8,7 +8,6 @@ export default function AdminDashboard() {
 
     const [itemBrand, setItemBrand] = useState("");
     const [itemName, setItemName] = useState("");
-    const [totalQuantity, setTotalQuantity] = useState("");
 
     const verifySeller = async () => {
         try {
@@ -41,11 +40,7 @@ export default function AdminDashboard() {
                 alert("Please fill brand and name");
                 return;
             }
-
-            const tx = await procurement.approveItem(
-                itemBrand,
-                itemName
-            );
+            const tx = await procurement.approveItem(itemBrand, itemName);
             await tx.wait();
             alert("Item added to catalog!");
         } catch (err) {
@@ -53,8 +48,8 @@ export default function AdminDashboard() {
             alert(err.reason || err.message);
         }
     };
-    
-     const [escrowAddr, setEscrowAddr] = useState("");
+
+    const [escrowAddr, setEscrowAddr] = useState("");
 
     const setEscrowInProcurement = async () => {
         try {
@@ -70,7 +65,7 @@ export default function AdminDashboard() {
 
     return (
         <div className="px-10 py-10 bg-gray-100 min-h-screen">
-            <h1 className="text-4xl font-bold text-blue-700 mb-10">
+            <h1 className="text-4xl font-bold text-gray-800 mb-10">
                 Admin Dashboard
             </h1>
 
@@ -88,13 +83,16 @@ export default function AdminDashboard() {
 
                     <button
                         onClick={verifySeller}
-                        className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition"
+                        className="w-full 
+                        bg-white/60 backdrop-blur-xl border border-gray-300 
+                        text-gray-800 py-3 rounded-xl 
+                        hover:bg-white transition"
                     >
                         Verify Seller
                     </button>
                 </div>
 
-                {/* Verify Brand */}
+
                 <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
                     <h3 className="text-xl font-bold mb-3">Verify Brand</h3>
 
@@ -107,13 +105,16 @@ export default function AdminDashboard() {
 
                     <button
                         onClick={verifyBrand}
-                        className="w-full bg-green-600 text-white py-3 rounded-xl hover:bg-green-700 transition"
+                        className="w-full 
+                        bg-white/60 backdrop-blur-xl border border-gray-300 
+                        text-gray-800 py-3 rounded-xl 
+                        hover:bg-white transition"
                     >
                         Verify Brand
                     </button>
                 </div>
 
-                {/* Add Catalog Item (approveItem in Procurement) */}
+
                 <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
                     <h3 className="text-xl font-bold mb-3">Add Catalog Item</h3>
 
@@ -131,17 +132,20 @@ export default function AdminDashboard() {
                         onChange={(e) => setItemName(e.target.value)}
                     />
 
-
                     <button
                         onClick={approveItem}
-                        className="w-full bg-yellow-500 text-white py-3 rounded-xl hover:bg-yellow-600 transition"
+                        className="w-full 
+                        bg-white/60 backdrop-blur-xl border border-gray-300 
+                        text-gray-800 py-3 rounded-xl 
+                        hover:bg-white transition"
                     >
                         Add Item
                     </button>
                 </div>
             </div>
 
-            <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+
+            <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition mt-10">
                 <h3 className="text-xl font-bold mb-3">Set Escrow Contract</h3>
 
                 <input
@@ -153,16 +157,14 @@ export default function AdminDashboard() {
 
                 <button
                     onClick={setEscrowInProcurement}
-                    className="w-full bg-purple-600 text-white py-3 rounded-xl hover:bg-purple-700 transition"
+                    className="w-full 
+                    bg-white/60 backdrop-blur-xl border border-gray-300 
+                    text-gray-800 py-3 rounded-xl 
+                    hover:bg-white transition"
                 >
                     Set Escrow
                 </button>
             </div>
-        
-
         </div>
-
-        
-
     );
 }
