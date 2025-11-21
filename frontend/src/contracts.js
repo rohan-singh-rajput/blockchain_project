@@ -28,25 +28,40 @@ export const getEscrow = async () => {
 
 
 export async function getApprovedItems() {
-    const contract = await getProcurement();
-    const count = await contract.itemCount();
+    const procurement = await getProcurement();
 
-    let approvedItems = [];
+    // Get all seller listings
+    const [sellers, itemIds, prices, quantities] =
+        await procurement.getAllListings();
 
-    for (let i = 0; i < count; i++) {
-        const item = await contract.items(i);
+    const listings = [];
 
-        if (item.approved) {
-            approvedItems.push({
-                id: i,
-                brand: item.brand,
-                name: item.name,
-                price: Number(item.price),
-                seller: item.seller,
-                approved: item.approved
-            });
-        }
+    for (let i = 0; i < itemIds.length; i++) {
+        const itemId = Number(itemIds[i]);
+        const seller = sellers[i];
+        const price = prices[i];          // BigNumber / bigint (ethers v6)
+        const quantity = quantities[i];
+
+        // Fetch catalog item info (brand, name, total_quantity)
+        const item = await procurement.items(itemId);
+
+        const brand = item.brand ?? item[0];
+        const name = item.name ?? item[1];
+        const totalQty = item.total_quantity ?? item[2];
+
+        listings.push({
+            id: i,                       // local index in this array
+            itemId,
+            brand,
+            name,
+            price: price.toString(),     // keep as string to avoid precision issues
+            seller,
+            sellerQuantity: Number(quantity),
+            totalQuantity: Number(totalQty),
+        });
     }
 
-    return approvedItems;
+    console.log("Listed items:", listings);
+    return listings;
 }
+

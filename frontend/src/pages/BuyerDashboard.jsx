@@ -1,21 +1,23 @@
+// BuyerDashboard.jsx
 import React, { useState, useEffect } from "react";
 import { getEscrow, getApprovedItems } from "../contracts";
 
 export default function BuyerDashboard() {
     const [itemId, setItemId] = useState("");
-    const [price, setPrice] = useState("");
+    const [seller, setSeller] = useState("");
+    const [unitPrice, setUnitPrice] = useState("");
+    const [quantityToBuy, setQuantityToBuy] = useState("1");
     const [orderId, setOrderId] = useState("");
 
     const [approvedItems, setApprovedItems] = useState([]);
 
-    // Load approved blockchain items on page open
     const loadItems = async () => {
         try {
             const items = await getApprovedItems();
             setApprovedItems(items);
         } catch (err) {
             console.error(err);
-            alert("Error loading items: " + err.message);
+            alert("Error loading items: " + (err.reason || err.message));
         }
     };
 
@@ -26,36 +28,59 @@ export default function BuyerDashboard() {
     const createOrder = async () => {
         try {
             const escrow = await getEscrow();
-            await escrow.createOrder(itemId, { value: Number(price) });
+
+            const itemIdNum = Number(itemId);
+            const qtyNum = Number(quantityToBuy);
+
+            if (!seller || isNaN(itemIdNum) || isNaN(qtyNum) || qtyNum <= 0) {
+                alert("Please select item, seller and a valid quantity.");
+                return;
+            }
+
+            // unitPrice is a string of wei; ethers v6 likes bigint
+            const pricePerUnit = BigInt(unitPrice);
+            const totalValue = pricePerUnit * BigInt(qtyNum);
+
+            const tx = await escrow.createOrder(
+                itemIdNum,
+                seller,
+                qtyNum,
+                { value: totalValue }
+            );
+            await tx.wait();
+
             alert("Order created. Funds locked in escrow.");
         } catch (err) {
-            alert(err.message);
+            console.error(err);
+            alert(err.reason || err.message);
         }
     };
 
     const confirmDelivery = async () => {
         try {
             const escrow = await getEscrow();
-            await escrow.confirmDelivery(orderId);
+            const orderIdNum = Number(orderId);
+            const tx = await escrow.confirmDelivery(orderIdNum);
+            await tx.wait();
             alert("Delivery confirmed. Payment released!");
         } catch (err) {
-            alert(err.message);
+            console.error(err);
+            alert(err.reason || err.message);
         }
     };
 
     return (
         <div className="px-10 py-10 bg-gray-100 min-h-screen">
-
             <h1 className="text-4xl font-bold text-yellow-600 mb-10">
                 Buyer Dashboard
             </h1>
 
-            {/* ---------- APPROVED ITEMS LIST ---------- */}
+            {/* ---------- LISTED ITEMS ---------- */}
             <div className="bg-white p-8 rounded-xl shadow mb-10">
-                <h3 className="text-3xl font-bold mb-6">Approved Items</h3>
+                <h3 className="text-3xl font-bold mb-6">Products Listed by Sellers</h3>
 
                 {approvedItems.length === 0 ? (
-                    <p>No approved items available.</p>
+                    <p>No products listed yet.</p>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {approvedItems.map((item) => (
@@ -63,19 +88,35 @@ export default function BuyerDashboard() {
                                 key={item.id}
                                 className="border p-5 rounded-xl shadow hover:shadow-lg transition bg-gray-50"
                             >
-                                <h4 className="text-xl font-semibold">{item.name}</h4>
-                                <p className="text-gray-600">Brand: {item.brand}</p>
-                                <p className="text-gray-600">Price: {item.price} Wei</p>
-                                <p className="text-gray-600 break-all">Seller: {item.seller}</p>
+                                <h4 className="text-xl font-semibold">
+                                    {item.name}
+                                </h4>
+                                <p className="text-gray-600">
+                                    Brand: {item.brand}
+                                </p>
+                                <p className="text-gray-600">
+                                    Catalog Item ID: {item.itemId}
+                                </p>
+                                <p className="text-gray-600">
+                                    Seller: {item.seller}
+                                </p>
+                                <p className="text-gray-600">
+                                    Price per unit: {item.price} Wei
+                                </p>
+                                <p className="text-gray-600">
+                                    Seller quantity: {item.sellerQuantity}
+                                </p>
 
                                 <button
                                     className="mt-4 w-full bg-yellow-500 text-white py-2 rounded-lg hover:bg-yellow-600 transition"
                                     onClick={() => {
-                                        setItemId(item.id);
-                                        setPrice(item.price);
+                                        setItemId(item.itemId);
+                                        setSeller(item.seller);
+                                        setUnitPrice(item.price);
+                                        setQuantityToBuy("1");
                                     }}
                                 >
-                                    Buy This Item
+                                    Buy from this seller
                                 </button>
                             </div>
                         ))}
@@ -89,16 +130,31 @@ export default function BuyerDashboard() {
 
                 <input
                     className="border p-3 w-full rounded mb-4"
-                    placeholder="Item ID"
+                    placeholder="Catalog Item ID"
                     value={itemId}
                     onChange={(e) => setItemId(e.target.value)}
                 />
 
                 <input
                     className="border p-3 w-full rounded mb-4"
-                    placeholder="Price (Wei)"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder="Seller Address"
+                    value={seller}
+                    onChange={(e) => setSeller(e.target.value)}
+                />
+
+                <input
+                    className="border p-3 w-full rounded mb-4"
+                    placeholder="Quantity"
+                    type="number"
+                    value={quantityToBuy}
+                    onChange={(e) => setQuantityToBuy(e.target.value)}
+                />
+
+                <input
+                    className="border p-3 w-full rounded mb-4"
+                    placeholder="Unit Price (Wei)"
+                    value={unitPrice}
+                    onChange={(e) => setUnitPrice(e.target.value)}
                 />
 
                 <button
@@ -127,7 +183,6 @@ export default function BuyerDashboard() {
                     Confirm Delivery
                 </button>
             </div>
-
         </div>
     );
 }
