@@ -1,12 +1,19 @@
 # **GovProcure – Decentralized Government Procurement System**
 
+## Group No 13
+- Arijeet Rakshit - 2024H1030183H
+- Pranav Mate - 2024H1030196H
+- Rajput Rohan Singh - 2024H1030169H
+- Sujay Suresh Patil - 2024H1030174H
+- Tanuj Dutta - 2024H1030201H
+
 A blockchain-based procurement platform designed to ensure **verified sellers**,  
 **transparent catalog approvals**, and **escrow-based payments**.  
 Built using **Solidity**, **Hardhat**, and a **React frontend**.
 
 ---
 
-## 📌 Overview
+##  Overview
 
 GovProcure introduces transparency and accountability in public procurement by leveraging smart contracts.
 
@@ -19,7 +26,7 @@ The system ensures:
 
 ---
 
-## 🏛️ Core Components
+##  Core Components
 
 ### **1. Registry Contract**
 
@@ -72,7 +79,7 @@ Secures buyer payments until delivery is confirmed.
 
 ---
 
-## 🔄 Workflow Summary
+##  Workflow Summary
 
 ### **Admin Flow**
 1. Verify sellers  
@@ -97,13 +104,9 @@ Secures buyer payments until delivery is confirmed.
 
 ---
 
-## 📁 Project Structure
+## Installation & Setup
 
-![Project Structure](../frontend/public/structure.png)
-
-## 🔧 Installation & Setup
-
-### **1. Install dependencies**
+### **Install dependencies**
 ```bash
 npm install --save-dev hardhat
 
@@ -120,34 +123,3 @@ npx hardhat run scripts/deploy.js --network sepolia
 Copy the deployed addresses and update:
 
 frontend/src/contracts/index.js
-
-🧩 Frontend Contract Integration (Example)
-import { ethers } from "ethers";
-import registryABI from "./registry.json";
-import procurementABI from "./procurement.json";
-import escrowABI from "./escrow.json";
-
-export async function getRegistry() {
-  const provider = new ethers.BrowserProvider(window.ethereum);
-  const signer = await provider.getSigner();
-  return new ethers.Contract(REGISTRY_ADDRESS, registryABI, signer);
-}
-
-🧪 Testing
-
-Run tests:
-
-npx hardhat test
-
-
-Recommended tests include:
-
-Seller verification
-
-Brand + item approvals
-
-Seller listing logic
-
-Escrow locking & release
-
-Order creation & confirmation
