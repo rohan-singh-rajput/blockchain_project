@@ -1,4 +1,3 @@
-// AdminDashboard.jsx
 import React, { useState } from "react";
 import { getRegistry, getProcurement } from "../contracts";
 
@@ -70,7 +69,6 @@ export default function AdminDashboard() {
             </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                {/* Verify Seller */}
                 <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
                     <h3 className="text-xl font-bold mb-3">Verify Seller</h3>
 

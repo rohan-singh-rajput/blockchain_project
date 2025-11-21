@@ -30,7 +30,6 @@ export const getEscrow = async () => {
 export async function getApprovedItems() {
     const procurement = await getProcurement();
 
-    // Get all seller listings
     const [sellers, itemIds, prices, quantities] =
         await procurement.getAllListings();
 
@@ -39,10 +38,9 @@ export async function getApprovedItems() {
     for (let i = 0; i < itemIds.length; i++) {
         const itemId = Number(itemIds[i]);
         const seller = sellers[i];
-        const price = prices[i];          // BigNumber / bigint (ethers v6)
+        const price = prices[i];
         const quantity = quantities[i];
 
-        // Fetch catalog item info (brand, name, total_quantity)
         const item = await procurement.items(itemId);
 
         const brand = item.brand ?? item[0];
@@ -50,11 +48,11 @@ export async function getApprovedItems() {
         const totalQty = item.total_quantity ?? item[2];
 
         listings.push({
-            id: i,                       // local index in this array
+            id: i,
             itemId,
             brand,
             name,
-            price: price.toString(),     // keep as string to avoid precision issues
+            price: price.toString(),
             seller,
             sellerQuantity: Number(quantity),
             totalQuantity: Number(totalQty),
@@ -65,3 +63,29 @@ export async function getApprovedItems() {
     return listings;
 }
 
+export async function getCatalogItems() {
+    const procurement = await getProcurement();
+
+    const countBN = await procurement.itemCount();
+    const count = Number(countBN);
+
+    const catalog = [];
+
+    for (let i = 0; i < count; i++) {
+        const item = await procurement.items(i);
+
+        const brand = item.brand ?? item[0];
+        const name = item.name ?? item[1];
+        const totalQty = item.total_quantity ?? item[2];
+
+        catalog.push({
+            itemId: i,
+            brand,
+            name,
+            totalQuantity: Number(totalQty),
+        });
+    }
+
+    console.log("Catalog items:", catalog);
+    return catalog;
+}

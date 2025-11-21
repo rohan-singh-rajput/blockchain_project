@@ -1,4 +1,3 @@
-// BuyerDashboard.jsx
 import React, { useState, useEffect } from "react";
 import { getEscrow, getApprovedItems } from "../contracts";
 
